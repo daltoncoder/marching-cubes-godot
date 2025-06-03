@@ -1,0 +1,11 @@
+[package]
+name = "marching_cubes_godot"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
+sprinting-cubes = {git = "https://github.com/daltoncoder/sprinting-cubes", branch = "main"}
+
+[lib]
+crate-type = ["cdylib"]
