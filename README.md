@@ -10,9 +10,9 @@ A simple Godot extension for generating mesh with marching cube algorithm to cre
 
 You can acess the MarchingCubesGenerator Class from your scripts now. Check example folder for an example of what that would look like 
 
-<video src='https://github.com/user-attachments/assets/b36d7fb0-dec9-46d7-a22d-643154389e67' width=180/>  
-
-
-### Using Perlin Noise to generate cave like terrain:  
+### Example of using Perlin Noise to generate cave like terrain:  
 ![Screenshot 2025-06-04 062352](https://github.com/user-attachments/assets/a856482b-af08-4d00-8837-4c33a9391e84)
+
+### General example
+<video src='https://github.com/user-attachments/assets/b36d7fb0-dec9-46d7-a22d-643154389e67' width=180/>  
 
