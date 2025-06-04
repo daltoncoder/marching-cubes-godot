@@ -48,6 +48,7 @@ impl MarchingCubesGenerator {
         depth: i32,
         isolevel: f32,
         scale: f32,
+        flip_normals: bool,
     ) -> Option<Gd<ArrayMesh>> {
         // Convert Godot types to Rust types
         let data_slice: &[f32] = data.as_slice();
@@ -68,7 +69,7 @@ impl MarchingCubesGenerator {
         }
 
         // Convert to Godot mesh
-        Some(self.create_godot_mesh(&mesh, scale))
+        Some(self.create_godot_mesh(&mesh, scale, flip_normals))
     }
 
     /// Generate a simple test sphere mesh
@@ -89,13 +90,13 @@ impl MarchingCubesGenerator {
                     let distance = (dx * dx + dy * dy + dz * dz).sqrt();
 
                     let index = (z * size * size + y * size + x) as usize;
-                    data[index] = radius - distance;
+                    data[index] = distance - radius;
                 }
             }
         }
 
         let mesh = marching_cubes(&data, dimensions, 0.0);
-        self.create_godot_mesh(&mesh, scale)
+        self.create_godot_mesh(&mesh, scale, true)
     }
 
     /// Generate terrain from a height function
@@ -123,7 +124,7 @@ impl MarchingCubesGenerator {
                     let terrain_height = ((nx * 0.1).sin() + (nz * 0.1).cos()) * height_scale;
                     let world_y = y as f32;
 
-                    let density = terrain_height - world_y;
+                    let density = world_y - terrain_height;
 
                     let index = (z * height * width + y * width + x) as usize;
                     data[index] = density;
@@ -132,10 +133,10 @@ impl MarchingCubesGenerator {
         }
 
         let mesh = marching_cubes(&data, dimensions, 0.0);
-        self.create_godot_mesh(&mesh, scale)
+        self.create_godot_mesh(&mesh, scale, true)
     }
 
-    fn create_godot_mesh(&self, mesh: &Mesh, scale: f32) -> Gd<ArrayMesh> {
+    fn create_godot_mesh(&self, mesh: &Mesh, scale: f32, flip_normals: bool) -> Gd<ArrayMesh> {
         let mut array_mesh = ArrayMesh::new_gd();
         let mut arrays = VariantArray::new();
         arrays.resize(MESH_ARRAY_MAX, &Variant::nil());
@@ -190,7 +191,22 @@ impl MarchingCubesGenerator {
         // Normalize accumulated normals and convert to PackedVector3Array
         let mut normals = PackedVector3Array::new();
         for normal in vertex_normals {
-            normals.push(normal.normalized());
+            // Check if the normal has any length before normalizing
+            if normal.length_squared() > 0.0001 {
+                let mut final_normal = normal.normalized();
+                if flip_normals {
+                    final_normal = -final_normal;
+                }
+                normals.push(final_normal);
+            } else {
+                // Use a default up vector for vertices with no valid normal
+                let default_normal = if flip_normals {
+                    Vector3::DOWN
+                } else {
+                    Vector3::UP
+                };
+                normals.push(default_normal);
+            }
         }
 
         // Set arrays
