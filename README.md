@@ -1,5 +1,5 @@
-# Marching Cubes Godot Extension
-https://github.com/user-attachments/assets/b36d7fb0-dec9-46d7-a22d-643154389e67
+# Marching Cubes Godot Extension  
+
 A simple Godot extension for generating mesh with marching cube algorithm to create anything. Great for procederal or destructable terrains
 
 ### To use 
@@ -10,4 +10,4 @@ A simple Godot extension for generating mesh with marching cube algorithm to cre
 
 You can acess the MarchingCubesGenerator Class from your scripts now. Check example folder for an example of what that would look like 
 
-
+<video src='https://github.com/user-attachments/assets/b36d7fb0-dec9-46d7-a22d-643154389e67' width=180/>  
